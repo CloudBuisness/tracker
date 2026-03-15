@@ -4,192 +4,327 @@
 <meta charset="UTF-8">
 <title>moonlight.cc</title>
 <style>
-body{
-  background:#0a0a0f;
-  color:#e4e4e7;
-  font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
-  margin:0;
-  overflow-x:hidden;
-  -webkit-font-smoothing:antialiased;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:24px 40px;
-  border-bottom:1px solid #1f1f28;
-  backdrop-filter:blur(20px);
-  background:rgba(10,10,15,0.85);
-  position:sticky;
-  top:0;
-  z-index:100;
+:root {
+  --bg: #0f0f12;
+  --bg-secondary: #16161d;
+  --bg-tertiary: #1c1c24;
+  --border: #272730;
+  --border-hover: #3a3a48;
+  --text-primary: #f0f0f5;
+  --text-secondary: #a0a0b0;
+  --text-tertiary: #6b6b7b;
+  --accent-blue: #3b82f6;
+  --accent-cyan: #06b6d4;
+  --accent-purple: #8b5cf6;
+  --accent-green: #10b981;
+  --accent-amber: #f59e0b;
+  --accent-red: #ef4444;
+  --accent-pink: #ec4899;
+  --glow-blue: 0 0 20px rgba(59, 130, 246, 0.15);
+  --glow-green: 0 0 20px rgba(16, 185, 129, 0.15);
+  --glow-amber: 0 0 20px rgba(245, 158, 11, 0.15);
+  --glow-red: 0 0 20px rgba(239, 68, 68, 0.15);
 }
 
-.logo{
-  font-size:22px;
-  font-weight:700;
-  letter-spacing:-0.5px;
-  background:linear-gradient(270deg,#ff5c5c,#ffa64d,#4ade80,#3b82f6,#f472b6);
-  background-size:1000% 1000%;
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  animation: gradientShift 10s ease infinite;
+body {
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
 }
 
-@keyframes gradientShift{
-  0%{background-position:0% 50%}
-  50%{background-position:100% 50%}
-  100%{background-position:0% 50%}
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(ellipse at 15% 50%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 85% 30%, rgba(139, 92, 246, 0.06) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
 }
 
-.stats{
-  display:flex;
-  gap:32px;
-  font-size:13px;
-  font-weight:500;
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 28px 48px;
+  background: rgba(15, 15, 18, 0.8);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
-.stat{
-  display:flex;
-  align-items:center;
-  gap:8px;
+.logo {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-blue) 50%, var(--accent-purple) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.stat-label{
-  color:#71717a;
+.stats {
+  display: flex;
+  gap: 32px;
 }
 
-.stat-value{
-  color:#fafafa;
-  font-weight:600;
+.stat {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 18px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 10px;
 }
 
-.status-dot{
-  width:10px;
-  height:10px;
-  border-radius:50%;
-  background:#10b981;
-  animation:pulse 2s infinite;
+.stat-label {
+  color: var(--text-tertiary);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-@keyframes pulse{
-  0%,100%{opacity:1}
-  50%{opacity:0.5}
+.stat-value {
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
 }
 
-.container{
-  max-width:1600px;
-  margin:auto;
-  padding:40px;
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent-green);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+  animation: pulse 2s ease infinite;
 }
 
-.terminal{
-  background:#0f0f14;
-  border:1px solid #27272a;
-  border-radius:14px;
-  margin-bottom:32px;
-  padding:20px;
-  height:180px;
-  overflow:hidden;
-  font-size:13px;
-  font-family:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
-  box-shadow:0 8px 24px rgba(0,0,0,0.4);
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
 }
 
-.line{
-  opacity:0.85;
-  padding:4px 0;
-  border-bottom:1px solid #1f1f28;
-  animation:fadeIn 0.3s ease;
-  transition:all 0.3s ease;
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 40px 48px;
+  position: relative;
+  z-index: 1;
 }
 
-.line:hover{
-  color:#facc15;
-  transform:translateX(4px);
+.terminal {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin-bottom: 32px;
+  padding: 24px;
+  height: 200px;
+  overflow-y: auto;
+  font-size: 13px;
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', Consolas, monospace;
+  color: var(--text-secondary);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
-.line:last-child{
-  border-bottom:none;
+.terminal::-webkit-scrollbar {
+  width: 6px;
 }
 
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(360px,1fr));
-  gap:22px;
+.terminal::-webkit-scrollbar-track {
+  background: transparent;
 }
 
-.card{
-  background:#13131a;
-  border:1px solid #27272a;
-  border-radius:14px;
-  padding:26px;
-  transition:all 0.25s ease;
-  animation:slideUp 0.3s ease;
-  box-shadow:0 4px 16px rgba(0,0,0,0.25);
+.terminal::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
 }
 
-.card:hover{
-  border-color:#3f3f46;
-  transform:translateY(-4px);
-  box-shadow:0 12px 36px rgba(0,0,0,0.45);
+.line {
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.2s ease;
 }
 
-.type{
-  font-size:12px;
-  font-weight:600;
-  text-transform:uppercase;
-  letter-spacing:0.5px;
-  color:#71717a;
-  margin-bottom:8px;
+.line:hover {
+  color: var(--text-primary);
+  padding-left: 8px;
 }
 
-.title{
-  font-size:18px;
-  font-weight:700;
-  color:#fafafa;
-  line-height:1.5;
-  margin-bottom:12px;
+.line::before {
+  content: '›';
+  color: var(--accent-cyan);
+  font-weight: 700;
+  font-size: 14px;
 }
 
-.desc{
-  font-size:14px;
-  color:#c4c4c8;
-  line-height:1.7;
-  white-space:pre-line;
-  margin-bottom:16px;
+.line:last-child {
+  border-bottom: none;
 }
 
-.time{
-  font-size:12px;
-  color:#52525b;
-  font-weight:500;
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 20px;
 }
 
-.sev-high{
-  border-left:4px solid #ef4444;
-  background:linear-gradient(90deg,rgba(239,68,68,0.08) 0%,transparent 100%);
+.card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
 }
 
-.sev-mid{
-  border-left:4px solid #f59e0b;
-  background:linear-gradient(90deg,rgba(245,158,11,0.08) 0%,transparent 100%);
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
 }
 
-.sev-low{
-  border-left:4px solid #10b981;
-  background:linear-gradient(90deg,rgba(16,185,129,0.08) 0%,transparent 100%);
+.card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
 }
 
-@keyframes slideUp{
-  from{opacity:0;transform:translateY(12px)}
-  to{opacity:1;transform:translateY(0)}
+.type {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-@keyframes fadeIn{
-  from{opacity:0}
-  to{opacity:0.85}
+.type::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 2px;
+  background: currentColor;
+}
+
+.title {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.4;
+  margin-bottom: 12px;
+}
+
+.desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  white-space: pre-line;
+  margin-bottom: 16px;
+}
+
+.time {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.time::before {
+  content: '◷';
+  font-size: 10px;
+}
+
+.sev-high {
+  border-left: 3px solid var(--accent-red);
+  background: linear-gradient(90deg, rgba(239, 68, 68, 0.06) 0%, transparent 40%);
+}
+
+.sev-high:hover {
+  border-color: var(--accent-red);
+  box-shadow: var(--glow-red), 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+.sev-high .type {
+  color: var(--accent-red);
+}
+
+.sev-mid {
+  border-left: 3px solid var(--accent-amber);
+  background: linear-gradient(90deg, rgba(245, 158, 11, 0.06) 0%, transparent 40%);
+}
+
+.sev-mid:hover {
+  border-color: var(--accent-amber);
+  box-shadow: var(--glow-amber), 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+.sev-mid .type {
+  color: var(--accent-amber);
+}
+
+.sev-low {
+  border-left: 3px solid var(--accent-green);
+  background: linear-gradient(90deg, rgba(16, 185, 129, 0.06) 0%, transparent 40%);
+}
+
+.sev-low:hover {
+  border-color: var(--accent-green);
+  box-shadow: var(--glow-green), 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+.sev-low .type {
+  color: var(--accent-green);
+}
+
+@media (max-width: 768px) {
+  header {
+    padding: 24px 24px;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .container {
+    padding: 24px;
+  }
+  
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .stats {
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
 }
 </style>
 </head>
@@ -199,10 +334,11 @@ header{
   <div class="stats">
     <div class="stat">
       <span class="status-dot"></span>
-      <span class="stat-value" id="count">0 events</span>
+      <span class="stat-label">Events</span>
+      <span class="stat-value" id="count">0</span>
     </div>
     <div class="stat">
-      <span class="stat-label">Last update</span>
+      <span class="stat-label">Last Update</span>
       <span class="stat-value" id="last">waiting</span>
     </div>
   </div>
@@ -212,39 +348,39 @@ header{
   <div class="grid" id="grid"></div>
 </div>
 <script>
-let lastHash=""
-async function load(){
-  let res=await fetch("updates.json?"+Date.now())
-  let data=await res.json()
-  let hash=JSON.stringify(data)
-  if(hash===lastHash) return
-  lastHash=hash
-  document.getElementById("count").innerText=data.length+" events"
-  if(data.length){
-    document.getElementById("last").innerText=new Date(data[data.length-1].time).toLocaleTimeString()
+let lastHash = ""
+async function load() {
+  let res = await fetch("updates.json?" + Date.now())
+  let data = await res.json()
+  let hash = JSON.stringify(data)
+  if (hash === lastHash) return
+  lastHash = hash
+  document.getElementById("count").innerText = data.length
+  if (data.length) {
+    document.getElementById("last").innerText = new Date(data[data.length - 1].time).toLocaleTimeString()
   }
-  let grid=document.getElementById("grid")
-  let terminal=document.getElementById("terminal")
-  grid.innerHTML=""
-  terminal.innerHTML=""
-  data.reverse().forEach(e=>{
-    let card=document.createElement("div")
-    card.className="card sev-"+(e.severity||"low")
-    card.innerHTML=`
+  let grid = document.getElementById("grid")
+  let terminal = document.getElementById("terminal")
+  grid.innerHTML = ""
+  terminal.innerHTML = ""
+  data.reverse().forEach(e => {
+    let card = document.createElement("div")
+    card.className = "card sev-" + (e.severity || "low")
+    card.innerHTML = `
       <div class="type">${e.type}</div>
       <div class="title">${e.title}</div>
       <div class="desc">${e.description}</div>
       <div class="time">${new Date(e.time).toLocaleString()}</div>
     `
     grid.appendChild(card)
-    let line=document.createElement("div")
-    line.className="line"
-    line.innerText="["+e.type+"] "+e.title
+    let line = document.createElement("div")
+    line.className = "line"
+    line.innerText = "[" + e.type + "] " + e.title
     terminal.appendChild(line)
   })
 }
 load()
-setInterval(load,5000)
+setInterval(load, 5000)
 </script>
 </body>
 </html>
