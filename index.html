@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>moonlight.cc</title>
+<style>
+body{
+  background:#0a0a0f;
+  color:#e4e4e7;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  margin:0;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:24px 40px;
+  border-bottom:1px solid #1f1f28;
+  backdrop-filter:blur(20px);
+  background:rgba(10,10,15,0.85);
+  position:sticky;
+  top:0;
+  z-index:100;
+}
+
+.logo{
+  font-size:22px;
+  font-weight:700;
+  letter-spacing:-0.5px;
+  background:linear-gradient(270deg,#ff5c5c,#ffa64d,#4ade80,#3b82f6,#f472b6);
+  background-size:1000% 1000%;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  animation: gradientShift 10s ease infinite;
+}
+
+@keyframes gradientShift{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+
+.stats{
+  display:flex;
+  gap:32px;
+  font-size:13px;
+  font-weight:500;
+}
+
+.stat{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.stat-label{
+  color:#71717a;
+}
+
+.stat-value{
+  color:#fafafa;
+  font-weight:600;
+}
+
+.status-dot{
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:#10b981;
+  animation:pulse 2s infinite;
+}
+
+@keyframes pulse{
+  0%,100%{opacity:1}
+  50%{opacity:0.5}
+}
+
+.container{
+  max-width:1600px;
+  margin:auto;
+  padding:40px;
+}
+
+.terminal{
+  background:#0f0f14;
+  border:1px solid #27272a;
+  border-radius:14px;
+  margin-bottom:32px;
+  padding:20px;
+  height:180px;
+  overflow:hidden;
+  font-size:13px;
+  font-family:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+  box-shadow:0 8px 24px rgba(0,0,0,0.4);
+}
+
+.line{
+  opacity:0.85;
+  padding:4px 0;
+  border-bottom:1px solid #1f1f28;
+  animation:fadeIn 0.3s ease;
+  transition:all 0.3s ease;
+}
+
+.line:hover{
+  color:#facc15;
+  transform:translateX(4px);
+}
+
+.line:last-child{
+  border-bottom:none;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(360px,1fr));
+  gap:22px;
+}
+
+.card{
+  background:#13131a;
+  border:1px solid #27272a;
+  border-radius:14px;
+  padding:26px;
+  transition:all 0.25s ease;
+  animation:slideUp 0.3s ease;
+  box-shadow:0 4px 16px rgba(0,0,0,0.25);
+}
+
+.card:hover{
+  border-color:#3f3f46;
+  transform:translateY(-4px);
+  box-shadow:0 12px 36px rgba(0,0,0,0.45);
+}
+
+.type{
+  font-size:12px;
+  font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:0.5px;
+  color:#71717a;
+  margin-bottom:8px;
+}
+
+.title{
+  font-size:18px;
+  font-weight:700;
+  color:#fafafa;
+  line-height:1.5;
+  margin-bottom:12px;
+}
+
+.desc{
+  font-size:14px;
+  color:#c4c4c8;
+  line-height:1.7;
+  white-space:pre-line;
+  margin-bottom:16px;
+}
+
+.time{
+  font-size:12px;
+  color:#52525b;
+  font-weight:500;
+}
+
+.sev-high{
+  border-left:4px solid #ef4444;
+  background:linear-gradient(90deg,rgba(239,68,68,0.08) 0%,transparent 100%);
+}
+
+.sev-mid{
+  border-left:4px solid #f59e0b;
+  background:linear-gradient(90deg,rgba(245,158,11,0.08) 0%,transparent 100%);
+}
+
+.sev-low{
+  border-left:4px solid #10b981;
+  background:linear-gradient(90deg,rgba(16,185,129,0.08) 0%,transparent 100%);
+}
+
+@keyframes slideUp{
+  from{opacity:0;transform:translateY(12px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+@keyframes fadeIn{
+  from{opacity:0}
+  to{opacity:0.85}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">moonlight.cc</div>
+  <div class="stats">
+    <div class="stat">
+      <span class="status-dot"></span>
+      <span class="stat-value" id="count">0 events</span>
+    </div>
+    <div class="stat">
+      <span class="stat-label">Last update</span>
+      <span class="stat-value" id="last">waiting</span>
+    </div>
+  </div>
+</header>
+<div class="container">
+  <div class="terminal" id="terminal"></div>
+  <div class="grid" id="grid"></div>
+</div>
+<script>
+let lastHash=""
+async function load(){
+  let res=await fetch("updates.json?"+Date.now())
+  let data=await res.json()
+  let hash=JSON.stringify(data)
+  if(hash===lastHash) return
+  lastHash=hash
+  document.getElementById("count").innerText=data.length+" events"
+  if(data.length){
+    document.getElementById("last").innerText=new Date(data[data.length-1].time).toLocaleTimeString()
+  }
+  let grid=document.getElementById("grid")
+  let terminal=document.getElementById("terminal")
+  grid.innerHTML=""
+  terminal.innerHTML=""
+  data.reverse().forEach(e=>{
+    let card=document.createElement("div")
+    card.className="card sev-"+(e.severity||"low")
+    card.innerHTML=`
+      <div class="type">${e.type}</div>
+      <div class="title">${e.title}</div>
+      <div class="desc">${e.description}</div>
+      <div class="time">${new Date(e.time).toLocaleString()}</div>
+    `
+    grid.appendChild(card)
+    let line=document.createElement("div")
+    line.className="line"
+    line.innerText="["+e.type+"] "+e.title
+    terminal.appendChild(line)
+  })
+}
+load()
+setInterval(load,5000)
+</script>
+</body>
+</html>
