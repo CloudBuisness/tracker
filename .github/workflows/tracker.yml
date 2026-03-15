@@ -1,0 +1,28 @@
+name: tracker
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm install
+
+      - run: node tracker.js
+
+      - run: |
+          git config user.name github-actions
+          git config user.email actions@github.com
+          git add updates.json
+          git commit -m update || echo nochange
+          git push
